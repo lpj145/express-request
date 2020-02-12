@@ -1,0 +1,26 @@
+{
+    "name": "marcos/ExpressRequest",
+    "description": "ExpressRequest plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "cakephp/cakephp": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ExpressRequest\\": "src/"
+        },
+        "files": [
+            "./functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ExpressRequest\\Test\\": "tests/",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
+        }
+    }
+}
