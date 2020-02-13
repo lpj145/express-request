@@ -90,6 +90,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 ````
 ### Request
 Let's see how you ``/domains`` endpoint now is more friendly for the requests/resources.
+
 Open browser: ``http://localhost:8765/domains?price=140..3000&sort[price]=asc&type[not]=profit&size=1``
 
 ````php
@@ -122,4 +123,63 @@ Open browser: ``http://localhost:8765/domains?price=140..3000&sort[price]=asc&ty
     "to": 1
   }
 }
+````
+### Details
+I've talked about this help me a lot, right ? now, see how stuff work's.
+
+Every requests is treat on ``ExpressRequest.ExpressParams`` this component
+try understand what request need and with help of model he reproduce a response,
+some operations or conditions by users can be dangerous or simple introduces requests
+errors on application because request is wrong, because this reason, model express to
+component what he can do, if can't did, nothing occur, and think, what we try search 'A'
+on boolean typed data ? because this question some typed filters is implemented.
+
+### Filters
+Powerfully and secure filter's:
+``BooleanFilter`` Filter by boolean values ? like `'true', 'false', '1', '0'`
+
+``NumberFilter`` can filter data by numbers with some helps.
+````php
+// localhost/domains?price=100 - Exact by 100
+// localhost/domains?price=100..200 - Between 100 and 200
+// localhost/domains?price[lt|gt|lte|gte]=100 - filter less, great, less than or great than.
+````
+
+``SearchFilter`` filter text/string.
+
+This filter have four methods of work:
+````php
+class SearchFilter implements FilterTypeInterface
+{
+    use ProcessableFilterTrait;
+
+    const PARTIAL_STRATEGY = 'partial';
+    const START_STRATEGY = 'start';
+    const END_STRATEGY = 'end';
+    const EXACT_STRATEGY = 'exact';
+    
+    ...code
+}
+````
+````php
+new SearchFilter('name') - Exact is default
+// localhost/domains?name=marcos - Exact by marcos
+new SearchFilter('name', SearchFilter::PARTIAL_STRATEGY)
+// localhost/domains?name=marcos - add a %value% by like method.
+new SearchFilter('name', SearchFilter::START_STRATEGY) 
+// localhost/domains?name=marcos - add a value% by like method.
+new SearchFilter('name', SearchFilter::END_STRATEGY) 
+// localhost/domains?name=marcos - add a %value by like method.
+````
+
+``SearchInFilter`` filter by value or group values.
+````php
+// localhost/domains?name=marcos - name in('marcos')
+// localhost/domains?name=marcos,github - name in('marcos', 'github')
+// localhost/domains?name[not]=marcos,github - name not in('marcos', 'github') 
+````
+
+``SearchDateFilter``
+````php
+
 ````
