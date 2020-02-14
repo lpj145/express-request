@@ -64,6 +64,15 @@ class ModelTable extends Table implements ExpressRepositoryInterface {
     }
 }
 ````
+
+### Contained data
+Sometimes we need to retrieve data with relationship, of course, it's can be easily.
+````php
+// http://localhost:8765/domains?nested=users //Get data with relationship
+````
+Need to add complex or conditions to your related data, the simple awnser is: you can't, 
+and you shouldn't try, if you need some complex related data see:
+[CakePHP docs](https://book.cakephp.org/4/en/orm/associations.html#using-association-finders)
 ### Controller
 In ``Controller/AppController.php`` load component called: ``ExpressRequest.ExpressParams``
 and now, add some code to our DomainsController.
