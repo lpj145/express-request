@@ -136,17 +136,19 @@ on boolean typed data ? because this question some typed filters is implemented.
 
 ### Filters
 Powerfully and secure filter's:
-``BooleanFilter`` Filter by boolean values ? like `'true', 'false', '1', '0'`
 
-``NumberFilter`` can filter data by numbers with some helps.
+##### BooleanFilter
+Filter by boolean values ? like `'true', 'false', '1', '0'`
+
+##### NumberFilter
+can filter data by numbers with some helps.
 ````php
 // localhost/domains?price=100 - Exact by 100
 // localhost/domains?price=100..200 - Between 100 and 200
 // localhost/domains?price[lt|gt|lte|gte]=100 - filter less, great, less than or great than.
 ````
 
-``SearchFilter`` filter text/string.
-
+##### SearchFilter
 This filter have four methods of work:
 ````php
 class SearchFilter implements FilterTypeInterface
@@ -172,14 +174,55 @@ new SearchFilter('name', SearchFilter::END_STRATEGY)
 // localhost/domains?name=marcos - add a %value by like method.
 ````
 
-``SearchInFilter`` filter by value or group values.
+##### SearchInFilter
+filter by value or group values.
 ````php
 // localhost/domains?name=marcos - name in('marcos')
 // localhost/domains?name=marcos,github - name in('marcos', 'github')
 // localhost/domains?name[not]=marcos,github - name not in('marcos', 'github') 
 ````
 
-``SearchDateFilter``
+##### SearchDateFilter
 ````php
+// localhost/domains?created_at=2019 - by init of 2019 year.
+// localhost/domains?created_at=2019-01 - by init of Jan/2019 year.
+// localhost/domains?created_at=201903 - by init of Mar/2019 year.
+// localhost/domains?created_at=2019-01-12 - by day 12 of Jan/2019 year.
+// localhost/domains?created_at=20190315 - by day 15 of Mar/2019 year.
+````
 
+##### Custom Filter ?
+By implementing ``FilterTypeInterface`` and if you want ``ProcessableFilterTrait``
+you can create a filter for what you need.
+
+#### About Component
+The component have a list of configurations values for work above
+query params, without ``reserved`` keys he try to filter content, if model
+accept it.
+````php
+[
+    'pagination' => true,
+    'maxSize' => 100, // Max number of per page.
+    'size' => 20, // default numbers of items per page
+    'ssl' => true, //generate routes with ssl by default
+    'reserved' => [  // If you need to use one o more of this keywords, change to alias.
+        'size' => 'size',
+        'page' => 'page',
+        'props' => 'props',
+        'nested' => 'nested',
+        'sort' => 'sort'
+    ]
+];
+````
+Change some configs...
+````php
+//Controller/AppController.php
+public function initialize()
+{
+    // ...code
+    $this->loadComponent('ExpressRequest.ExpressParams', [
+        'ssl' => false,
+        'maxSize' => 30
+    ]);
+}
 ````

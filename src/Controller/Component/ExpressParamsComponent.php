@@ -4,13 +4,8 @@ declare(strict_types=1);
 namespace ExpressRequest\Controller\Component;
 
 use Cake\Collection\Collection;
-use Cake\Collection\CollectionInterface;
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
-use Cake\Controller\Controller;
 use Cake\Datasource\Paginator;
-use Cake\Datasource\RepositoryInterface;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
 use Cake\Routing\Router;
@@ -38,7 +33,7 @@ class ExpressParamsComponent extends Component
         'pagination' => true,
         'maxSize' => 100,
         'size' => 20,
-        'ssl' => true,
+        'ssl' => true, //generate routes
         'reserved' => [
             'size' => 'size',
             'page' => 'page',
