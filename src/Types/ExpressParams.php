@@ -99,7 +99,7 @@ class ExpressParams
      */
     public function setOrderDesc(array $orderDesc): void
     {
-        $this->orderDesc = $this->setAliasOnValues($orderDesc);
+        $this->orderDesc = $this->setAliasOnKeys($orderDesc);
     }
 
     /**
@@ -149,6 +149,11 @@ class ExpressParams
         return $this->filtersCollections;
     }
 
+    /**
+     * @param array $items
+     * @return array
+     * @throws \ErrorException
+     */
     protected function setAliasOnValues(array $items): array
     {
         if (empty($this->alias)) {
@@ -157,5 +162,21 @@ class ExpressParams
         return array_map(function($item) {
             return $this->alias.'.'.$item;
         }, $items);
+    }
+
+    /**
+     * @param array $items
+     * @return array
+     * @throws \ErrorException
+     */
+    protected function setAliasOnKeys(array $items)
+    {
+        if (empty($this->alias)) {
+            throw new \ErrorException('ExpressRequest: Alias is empty.');
+        }
+
+        return array_map(function($fieldName){
+            return $this->alias.'.'.$fieldName;
+        }, array_keys($items));
     }
 }
