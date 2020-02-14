@@ -1,5 +1,5 @@
 {
-    "name": "mdantas/ExpressRequest",
+    "name": "mdantas/express-request",
     "description": "ExpressRequest plugin for CakePHP",
     "type": "cakephp-plugin",
     "license": "MIT",
