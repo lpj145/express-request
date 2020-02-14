@@ -134,6 +134,11 @@ errors on application because request is wrong, because this reason, model expre
 component what he can do, if can't did, nothing occur, and think, what we try search 'A'
 on boolean typed data ? because this question some typed filters is implemented.
 
+### Select only fields.
+````php
+// localhost/domains?props=name,price,created_at - Select only this three fields.
+````
+
 ### Filters
 Powerfully and secure filter's:
 
@@ -222,7 +227,10 @@ public function initialize()
     // ...code
     $this->loadComponent('ExpressRequest.ExpressParams', [
         'ssl' => false,
-        'maxSize' => 30
+        'maxSize' => 30,
+        'reserved' => [
+            'props' => 'fields'
+        ]
     ]);
 }
 ````
