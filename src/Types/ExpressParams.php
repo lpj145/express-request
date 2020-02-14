@@ -79,10 +79,11 @@ class ExpressParams
 
     /**
      * @param array $orderAsc
+     * @throws \ErrorException
      */
     public function setOrderAsc(array $orderAsc): void
     {
-        $this->orderAsc = $orderAsc;
+        $this->orderAsc = $this->setAliasOnKeys($orderAsc);
     }
 
     /**
