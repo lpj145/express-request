@@ -68,7 +68,7 @@ class ModelTable extends Table implements ExpressRepositoryInterface {
 ### Contained data
 Sometimes we need to retrieve data with relationship, of course, it's can be easily.
 ````php
-// http://localhost:8765/domains?nested=users //Get data with relationship
+// http://localhost:8765/domains?nested=users,comments //Get data with relationship
 ````
 Need to add complex or conditions to your related data, the simple awnser is: you can't, 
 and you shouldn't try, if you need some complex related data see:
