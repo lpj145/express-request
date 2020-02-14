@@ -16,7 +16,7 @@ You can install this plugin into your CakePHP application using [composer](https
 The recommended way to install composer packages is:
 
 ```
-composer require mdantas/ExpressRequest
+composer require mdantas/express-request
 ```
 Add plugin to our ``Application.php``
 
