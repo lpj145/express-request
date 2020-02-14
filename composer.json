@@ -3,6 +3,9 @@
     "description": "ExpressRequest plugin for CakePHP",
     "type": "cakephp-plugin",
     "license": "MIT",
+    "require": {
+        "cakephp/cakephp": ">3.2"
+    },
     "require-dev": {
         "phpunit/phpunit": "^8.0"
     },
