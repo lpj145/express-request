@@ -7,8 +7,6 @@ use ExpressRequest\Types\FiltersCollection;
 
 interface ExpressRepositoryInterface extends RepositoryInterface
 {
-    public function getQuery(): Query;
-
     public function getFilterable(): FiltersCollection;
 
     public function getSelectables(): array;

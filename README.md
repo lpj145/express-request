@@ -35,11 +35,6 @@ make new methods.
 //Model/Table/DomainsTable.php
 class ModelTable extends Table implements ExpressRepositoryInterface {
     //...code...
-    public function getQuery(): Query
-    {
-        // Implement custom query by your.
-        return $this->find('all');
-    }
     
     public function getFilterable(): FiltersCollection
     {
@@ -73,11 +68,14 @@ and now, add some code to our DomainsController.
 
 public function index()
 {
+    // The finder need to be a method what return a Cake\ORM\Query object.
     return $this
         ->responseJson(
             $this->ExpressParams->search(
                 $this->request,
-                $this->Domains
+                $this->Domains,
+                'findDomainsByCompany', // Finder model method
+                $companyId // Optional
             )
         );
 }

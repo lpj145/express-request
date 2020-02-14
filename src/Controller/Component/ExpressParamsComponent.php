@@ -45,18 +45,31 @@ class ExpressParamsComponent extends Component
 
     public function search(
         ServerRequest $request,
-        ExpressRepositoryInterface $repository
+        ExpressRepositoryInterface $repository,
+        string $finder,
+        $arg = null
     ): \Traversable
     {
+        if (!method_exists($repository, $finder)) {
+            throw new \ErrorException(
+                sprintf('ExpressRequest: finder \'%s\' not exist on model: %s', $finder, get_class($repository))
+            );
+        }
+
         $paginator = new Paginator();
         $params = $request->getQueryParams();
         $filterableCollection = $repository->getFilterable();
+        $repositoryQuery = call_user_func([$repository, $finder], $arg);
+
+        if (!$repositoryQuery instanceof Query) {
+            throw new \ErrorException('ExpressRequest: find: \''.$finder.'\' not return Cake\ORM\Query object.');
+        }
 
         if (
             empty($params)
         ) {
             return $this->processPagination(
-                $repository->getQuery(),
+                $repositoryQuery,
                 $paginator,
                 1,
                 $this->getConfig('size'),
@@ -97,7 +110,7 @@ class ExpressParamsComponent extends Component
         }
 
         $query = $this->processSearch(
-            $repository,
+            $repositoryQuery,
             $expressParams
         );
 
@@ -134,6 +147,7 @@ class ExpressParamsComponent extends Component
      * @param $attributesString
      * @param array $selectable
      * @param ExpressParams $expressParams
+     * @throws \ErrorException
      */
     protected function setSelectableFields($attributesString, array $selectable, ExpressParams $expressParams)
     {
@@ -169,6 +183,7 @@ class ExpressParamsComponent extends Component
      * `sort` param is like 'sort[name]=asc&sort[created]=desc'
      * @param $sortArray
      * @param ExpressParams $expressParams
+     * @throws \ErrorException
      */
     protected function setSortOfItems($sortArray, ExpressParams $expressParams)
     {
@@ -224,11 +239,11 @@ class ExpressParamsComponent extends Component
     }
 
     protected function processSearch(
-        ExpressRepositoryInterface $repository,
+        Query $query,
         ExpressParams $expressParams
     ): Query
     {
-        return (new FilterRepositoryService())($repository->getQuery(), $expressParams);
+        return (new FilterRepositoryService())($query, $expressParams);
     }
 
     protected function processPagination(
