@@ -45,7 +45,8 @@ class ExpressParamsComponent extends Component
 
     public function search(
         ServerRequest $request,
-        ExpressRepositoryInterface $repository
+        ExpressRepositoryInterface $repository,
+        $arg = null
     ): \Traversable
     {
         $paginator = new Paginator();
@@ -56,7 +57,7 @@ class ExpressParamsComponent extends Component
             empty($params)
         ) {
             return $this->processPagination(
-                $repository->getQuery(),
+                $repository->getQuery($arg),
                 $paginator,
                 1,
                 $this->getConfig('size'),
@@ -97,7 +98,7 @@ class ExpressParamsComponent extends Component
         }
 
         $query = $this->processSearch(
-            $repository,
+            $repository->getQuery($arg),
             $expressParams
         );
 
@@ -224,11 +225,11 @@ class ExpressParamsComponent extends Component
     }
 
     protected function processSearch(
-        ExpressRepositoryInterface $repository,
+        Query $query,
         ExpressParams $expressParams
     ): Query
     {
-        return (new FilterRepositoryService())($repository->getQuery(), $expressParams);
+        return (new FilterRepositoryService())($query, $expressParams);
     }
 
     protected function processPagination(
