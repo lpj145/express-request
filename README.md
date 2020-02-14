@@ -65,14 +65,6 @@ class ModelTable extends Table implements ExpressRepositoryInterface {
 }
 ````
 
-### Contained data
-Sometimes we need to retrieve data with relationship, of course, it's can be easily.
-````php
-// http://localhost:8765/domains?nested=users,comments //Get data with relationship
-````
-Need to add complex or conditions to your related data, the simple awnser is: you can't, 
-and you shouldn't try, if you need some complex related data see:
-[CakePHP docs](https://book.cakephp.org/4/en/orm/associations.html#using-association-finders)
 ### Controller
 In ``Controller/AppController.php`` load component called: ``ExpressRequest.ExpressParams``
 and now, add some code to our DomainsController.
@@ -143,10 +135,27 @@ errors on application because request is wrong, because this reason, model expre
 component what he can do, if can't did, nothing occur, and think, what we try search 'A'
 on boolean typed data ? because this question some typed filters is implemented.
 
+
+
 ### Select only fields.
 ````php
 // localhost/domains?props=name,price,created_at - Select only this three fields.
 ````
+### Sorting data
+for each field, have two values: asc, desc.
+````php
+// localhost/domains?sort[name]=asc
+// localhost/domains?sort[name]=asc&sort[price]=desc
+````
+
+### Contained data
+Sometimes we need to retrieve data with relationship, of course, it's can be easily.
+````php
+// http://localhost:8765/domains?nested=users,comments //Get data with relationship
+````
+Need to add complex or conditions to your related data, the simple awnser is: you can't, 
+and you shouldn't try, if you need some complex related data see:
+[CakePHP docs](https://book.cakephp.org/4/en/orm/associations.html#using-association-finders)
 
 ### Filters
 Powerfully and secure filter's:
