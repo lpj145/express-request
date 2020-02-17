@@ -1,14 +1,14 @@
 # ExpressRequest plugin for CakePHP
 
 ## Something about package
-This package help me a lot with query url, maybe he help you, many time
-when i try to make api's for long time, i tried to make complex url, complex query
-parameters and i felt frustrated, because something not make sense before i did.
-after poc's and poc's and good companion's help, i've come to this conclusion.
+This package help me a lot with query url, maybe it will help you, often
+when I try to make api's I tried to make complex url, complex querystring
+parameters and I felt frustrated, because something did not make sense.
+After poc's and poc's and good companion's help, I've come to this conclusion.
 
 ### How this package can help you
 Instead of make more and more complex url query params or many endpoints,
-let's try produce what really model can be to customers, goto code.
+let's try to produce what really model can be to customers, goto code.
 
 ### Installation
 You can install this plugin into your CakePHP application using [composer](https://getcomposer.org).
@@ -33,7 +33,7 @@ Our table object needed implement ``ExpressRepositoryInterface``
 make new methods.
 ````php
 //Model/Table/DomainsTable.php
-class ModelTable extends Table implements ExpressRepositoryInterface {
+class DomainsTable extends Table implements ExpressRepositoryInterface {
     //...code...
     
     public function getFilterable(): FiltersCollection
@@ -80,7 +80,7 @@ public function index()
         );
 }
 ````
-``*Of course, can't remember add route to this controller.``
+``*Of course, don't forget to add a route to this controller.``
 ````php
 //routes.php
 $routes->scope('/', function (RouteBuilder $builder) {
@@ -88,9 +88,9 @@ $routes->scope('/', function (RouteBuilder $builder) {
 }
 ````
 ### Request
-Let's see how you ``/domains`` endpoint now is more friendly for the requests/resources.
+Let's see how your ``/domains`` endpoint is now more friendly for the requests/resources.
 
-Open browser: ``http://localhost:8765/domains?price=140..3000&sort[price]=asc&type[not]=profit&size=1``
+Open in the browser: ``http://localhost:8765/domains?price=140..3000&sort[price]=asc&type[not]=profit&size=1``
 
 ````php
 // http://localhost:8765/domains?price=140..3000&sort[price]=asc&type[not]=profit&size=1
@@ -124,14 +124,14 @@ Open browser: ``http://localhost:8765/domains?price=140..3000&sort[price]=asc&ty
 }
 ````
 ### Details
-I've talked about this help me a lot, right ? now, see how stuff work's.
+I've talked about this help me a lot, right? now, see how this stuff works.
 
 Every requests is treat on ``ExpressRequest.ExpressParams`` this component
-try understand what request need and with help of model he reproduce a response,
-some operations or conditions by users can be dangerous or simple introduces requests
-errors on application because request is wrong, because this reason, model express to
-component what he can do, if can't did, nothing occur, and think, what we try search 'A'
-on boolean typed data ? because this question some typed filters is implemented.
+try to understand what the request need and with help of model it reproduces a response,
+some operations or conditions by the users can be dangerous or simple introduces requests
+errors on application because the request is wrong, for this reason, model express to
+component what it can do, if it can't, nothing occur, and think, what if we try to search 'A'
+on boolean typed data? For this reason some typed filters are implemented.
 
 
 
@@ -217,8 +217,8 @@ By implementing ``FilterTypeInterface`` and if you want ``ProcessableFilterTrait
 you can create a filter for what you need.
 
 #### About Component
-The component have a list of configurations values for work above
-query params, without ``reserved`` keys he try to filter content, if model
+The component have a list of configurations values to work above
+query params, without ``reserved`` keys it try to filter content, if model
 accept it.
 ````php
 [
