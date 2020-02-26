@@ -175,9 +175,10 @@ class ExpressParams
         if (empty($this->alias)) {
             throw new \ErrorException('ExpressRequest: Alias is empty.');
         }
-
-        return array_map(function($fieldName){
-            return $this->alias.'.'.$fieldName;
-        }, array_keys($items));
+        
+        return array_reduce(array_keys($items), function($accum, $item) use($items){
+            $accum[$this->alias.'.'.$item] = $items[$item];
+            return $accum;
+        }, []);
     }
 }
