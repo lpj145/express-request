@@ -169,6 +169,15 @@ can filter data by numbers with some helps.
 // localhost/domains?price[lt|gt|lte|gte]=100 - filter less, great, less than or great than.
 ````
 
+##### NullFilter
+This filter simple execute is or is not null on query.
+````php
+new SearchFilter('name')
+// localhost/domains?name=null - WHERE name IS NULL
+// localhost/domains?name[is]=null - WHERE name IS NULL
+// localhost/domains?name[not]=null - WHERE name IS NOT NULL
+````
+
 ##### SearchFilter
 This filter have four methods of work:
 ````php

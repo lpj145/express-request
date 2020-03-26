@@ -42,6 +42,16 @@ class SearchFilter implements FilterTypeInterface
 
     public function setValue($value)
     {
+        if (
+            is_array($value)
+            || is_numeric($value)
+            || is_null($value)
+            || $value === 'null'
+        ) {
+            $this->setCantProcess();
+            return;
+        }
+
         $this->setProcessable();
         switch ($this->mode) {
             case self::PARTIAL_STRATEGY:
