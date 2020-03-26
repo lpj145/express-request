@@ -46,7 +46,7 @@ class NullFilter implements FilterTypeInterface
 
         $this->mode = key($value);
 
-        if (!array_key_exists($this->mode, [self::IS_STRATEGY, self::NOT_STRATEGY])) {
+        if (!in_array($this->mode, [self::IS_STRATEGY, self::NOT_STRATEGY])) {
             $this->setCantProcess();
             return;
         }
