@@ -63,9 +63,9 @@ class NullFilter implements FilterTypeInterface
     public function process(QueryExpression $expression, string $alias): QueryExpression
     {
         $fieldName = $alias.'.'.$this->getName();
-        if ($this->mode !== self::IS_STRATEGY) {
+        if ($this->mode === self::IS_STRATEGY) {
             return $expression->isNull($fieldName);
         }
-        return $expression->isNull($fieldName);
+        return $expression->isNotNull($fieldName);
     }
 }
