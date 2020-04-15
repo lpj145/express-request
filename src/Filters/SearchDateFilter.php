@@ -117,19 +117,19 @@ class SearchDateFilter implements FilterTypeInterface
             return \DateTime::createFromFormat('Y-m-d H:i:s', $date.'-01-01 00:00:00');
         }
 
-        if (matchExp('/([12]\d{3}(01|02|03|04|05|06|07|08|09|10|11|12$))/', $date)) {
+        if (matchExp('/([12]\d{3}(01|02|03|04|05|06|07|08|09|10|11|12))/', $date)) {
             return \DateTime::createFromFormat('Ym-d H:i:s', $date.'-01 00:00:00');
         }
 
-        if (matchExp('/([12]\d{3}-(01|02|03|04|05|06|07|08|09|10|11|12$))/', $date)) {
+        if (matchExp('/([12]\d{3}-(01|02|03|04|05|06|07|08|09|10|11|12))/', $date)) {
             return \DateTime::createFromFormat('Y-m-d H:i:s', $date.'-01 00:00:00');
         }
 
-        if (matchExp('/([12]\d{3}(01|02|03|04|05|06|07|08|09|10|11|12$)(0[1-9]|[12]\d|3[01]))/', $date)) {
+        if (matchExp('/([12]\d{3}(01|02|03|04|05|06|07|08|09|10|11|12)(0[1-9]|[12]\d|3[01]))/', $date)) {
             return \DateTime::createFromFormat('Ymd H:i:s', $date.' 00:00:00');
         }
 
-        if (matchExp('/([12]\d{3}-(01|02|03|04|05|06|07|08|09|10|11|12$)-(0[1-9]|[12]\d|3[01]))/', $date)) {
+        if (matchExp('/([12]\d{3}-(01|02|03|04|05|06|07|08|09|10|11|12)-(0[1-9]|[12]\d|3[01]))/', $date)) {
             return \DateTime::createFromFormat('Y-m-d H:i:s', $date.' 00:00:00');
         }
 
