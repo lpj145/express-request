@@ -165,7 +165,10 @@ class ExpressParamsComponent extends Component
         }
 
         $expressParams->setFields(
-            array_intersect($attributes, $selectable)
+            array_intersect(
+                array_map('strtolower', $attributes),
+                array_map('strtolower', $selectable)
+            )
         );
     }
 
