@@ -161,6 +161,9 @@ class ExpressParams
             throw new \ErrorException('ExpressRequest: Alias is empty.');
         }
         return array_map(function($item) {
+            if (strpos($item, '.') !== false) {
+                return $item;
+            }
             return $this->alias.'.'.$item;
         }, $items);
     }
