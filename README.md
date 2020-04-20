@@ -236,6 +236,7 @@ accept it, url queries
     'size' => 20, // default numbers of items per page
     'ssl' => true, // generate routes with ssl by default,
     'cacheConfig' => 'default', // cache config
+    'cache' => true, // Enable or disable cache
     'reserved' => [  // If you need to use one o more of this keywords, change to alias.
         'size' => 'size',
         'page' => 'page',
