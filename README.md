@@ -228,13 +228,14 @@ you can create a filter for what you need.
 #### About Component
 The component have a list of configurations values to work above
 query params, without ``reserved`` keys it try to filter content, if model
-accept it.
+accept it, url queries
 ````php
 [
     'pagination' => true,
     'maxSize' => 100, // Max number of per page.
     'size' => 20, // default numbers of items per page
-    'ssl' => true, //generate routes with ssl by default
+    'ssl' => true, // generate routes with ssl by default,
+    'cacheConfig' => 'default', // cache config
     'reserved' => [  // If you need to use one o more of this keywords, change to alias.
         'size' => 'size',
         'page' => 'page',

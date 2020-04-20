@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ExpressRequest\Controller\Component;
 
+use Cake\Cache\Cache;
 use Cake\Collection\Collection;
 use Cake\Controller\Component;
 use Cake\Datasource\Paginator;
@@ -34,6 +35,8 @@ class ExpressParamsComponent extends Component
         'maxSize' => 100,
         'size' => 20,
         'ssl' => true, //generate routes
+        'cacheConfig' => 'default',
+        'cache' => true,
         'reserved' => [
             'size' => 'size',
             'page' => 'page',
@@ -56,6 +59,7 @@ class ExpressParamsComponent extends Component
             );
         }
 
+        $md5UrlPath = md5($request->getUri()->getPath().'/'.$request->getUri()->getQuery());
         $paginator = new Paginator();
         $params = $request->getQueryParams();
         $filterableCollection = $repository->getFilterable();
@@ -77,37 +81,12 @@ class ExpressParamsComponent extends Component
             );
         }
 
-        $expressParams = new ExpressParams();
-        $expressParams->setAlias($repository->getAlias());
-
-        $this->matchRun(
-            $this->getReserved('props'),
+        $expressParams = $this->processComposedParams(
+            $repository,
+            $md5UrlPath,
             $params,
-            'setSelectableFields',
-            $repository->getSelectables(),
-            $expressParams
+            $filterableCollection
         );
-
-        $this->matchRun($this->getReserved('size'), $params, 'setSizeOfPage', $expressParams);
-        $this->matchRun($this->getReserved('sort'), $params, 'setSortOfItems', $expressParams);
-        $this->matchRun($this->getReserved('page'), $params,'setPage', $expressParams);
-        $this->matchRun($this->getReserved('nested'), $params, 'setNestedData', $expressParams);
-
-        /**
-         * If not have any filters, simple don't try anything.
-         */
-        if (!$filterableCollection->isEmpty()) {
-            $filterableFieldsFromParams = $this->filterArrayOutFromKeys(
-                $params,
-                $this->getReserved()
-            );
-
-            $this->setFilters(
-                $filterableFieldsFromParams,
-                $filterableCollection,
-                $expressParams
-            );
-        }
 
         $query = $this->processSearch(
             $repositoryQuery,
@@ -274,6 +253,63 @@ class ExpressParamsComponent extends Component
                 $paginator->getPagingParams()[$query->getRepository()->getAlias()]
             )
         ]);
+    }
+
+    protected function processComposedParams(
+        ExpressRepositoryInterface $repository,
+        string $urlPath,
+        array $params,
+        FiltersCollection $filterableCollection,
+        bool $canCache
+    )
+    {
+        $cachedExpressParams = null;
+        if ($canCache) {
+            $configCache = $this->getConfig('cacheConfig');
+            $cachedExpressParams = Cache::read('express.queries.'.$urlPath, $configCache);
+        }
+
+        if (!is_null($cachedExpressParams)) {
+            return $cachedExpressParams;
+        }
+
+        $expressParams = new ExpressParams();
+        $expressParams->setAlias($repository->getAlias());
+
+        $this->matchRun(
+            $this->getReserved('props'),
+            $params,
+            'setSelectableFields',
+            $repository->getSelectables(),
+            $expressParams
+        );
+
+        $this->matchRun($this->getReserved('size'), $params, 'setSizeOfPage', $expressParams);
+        $this->matchRun($this->getReserved('sort'), $params, 'setSortOfItems', $expressParams);
+        $this->matchRun($this->getReserved('page'), $params,'setPage', $expressParams);
+        $this->matchRun($this->getReserved('nested'), $params, 'setNestedData', $expressParams);
+
+        /**
+         * If not have any filters, simple don't try anything.
+         */
+        if (!$filterableCollection->isEmpty()) {
+            $filterableFieldsFromParams = $this->filterArrayOutFromKeys(
+                $params,
+                $this->getReserved()
+            );
+
+            $this->setFilters(
+                $filterableFieldsFromParams,
+                $filterableCollection,
+                $expressParams
+            );
+        }
+
+        if ($canCache) {
+            Cache::write('express.queries.'.$urlPath, $expressParams, $configCache);
+        }
+
+        return $expressParams;
     }
 
     protected function organizeMetaPagination(array $paginationParams)
