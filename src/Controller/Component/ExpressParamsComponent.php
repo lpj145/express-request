@@ -259,6 +259,8 @@ class ExpressParamsComponent extends Component
             [
                 'page' => $page,
                 'limit' => $limit,
+            ],
+            [
                 'maxLimit' => $maxSize
             ]
         );
