@@ -85,7 +85,8 @@ class ExpressParamsComponent extends Component
             $repository,
             $md5UrlPath,
             $params,
-            $filterableCollection
+            $filterableCollection,
+            $this->getConfig('cache')
         );
 
         $query = $this->processSearch(
