@@ -49,10 +49,14 @@ class ExpressParamsComponent extends Component
     public function search(
         ServerRequest $request,
         ExpressRepositoryInterface $repository,
-        string $finder,
+        string $finder = null,
         $arg = null
     ): \Traversable
     {
+        if (is_null($finder)) {
+            $finder = 'query';
+        }
+
         if (!method_exists($repository, $finder)) {
             throw new \ErrorException(
                 sprintf('ExpressRequest: finder \'%s\' not exist on model: %s', $finder, get_class($repository))
