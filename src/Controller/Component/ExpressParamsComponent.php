@@ -103,13 +103,16 @@ class ExpressParamsComponent extends Component
             $this->getConfig('size')
         ;
 
+        $noPage = $params['noPage'] ?? false;
+        $noPage = (bool)$noPage;
+
         return $this->processPagination(
             $query,
             $paginator,
             $expressParams->getPage(),
             $sizeOfPage,
             $this->getConfig('maxSize'),
-            $params['noPage'] ?? false
+            $noPage
         );
     }
 
