@@ -108,7 +108,8 @@ class ExpressParamsComponent extends Component
             $paginator,
             $expressParams->getPage(),
             $sizeOfPage,
-            $this->getConfig('maxSize')
+            $this->getConfig('maxSize'),
+            $params['noPage'] ?? false
         );
     }
 
@@ -238,9 +239,17 @@ class ExpressParamsComponent extends Component
         Paginator $paginator,
         int $page,
         int $limit,
-        int $maxSize
+        int $maxSize,
+        bool $noPage = false
     )
     {
+        if ($noPage) {
+            return new Collection(
+                $query
+                    ->all()
+            );
+        }
+
         $data = $paginator->paginate(
             $query,
             [
