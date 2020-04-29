@@ -47,7 +47,7 @@ class ExpressParamsComponent extends Component
         ]
     ];
 
-    public function __invoke(int $status = 200): ResponseInterface
+    public function getResponse(int $status = 200): ResponseInterface
     {
         return $this->getController()
             ->getResponse()

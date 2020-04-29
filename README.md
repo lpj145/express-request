@@ -83,8 +83,9 @@ public function index()
 public function alternative()
 {
     // Request and Model now is taked from controller.
-    // Need code http status ?
-    return this->ExpressRequest(200); // Return a ResponseInterface from psr.
+    // Need status code
+    // Return a ResponseInterface from psr with json data on body.
+    return this->ExpressRequest->getResponse(200);
 }
 ````
 ``*Of course, don't forget to add a route to this controller.``
