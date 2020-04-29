@@ -83,6 +83,7 @@ public function index()
 public function alternative()
 {
     // Request and Model now is taked from controller.
+    // Need code http status ?
     return this->ExpressRequest(200); // Return a ResponseInterface from psr.
 }
 ````
