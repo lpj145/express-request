@@ -16,6 +16,7 @@ use ExpressRequest\Filters\FilterTypeInterface;
 use ExpressRequest\FunctionalClosure;
 use ExpressRequest\Types\ExpressParams;
 use ExpressRequest\Types\FiltersCollection;
+use Psr\Http\Message\ResponseInterface;
 
 
 /**
@@ -45,6 +46,17 @@ class ExpressParamsComponent extends Component
             'sort' => 'sort'
         ]
     ];
+
+    public function __invoke(int $status = 200): ResponseInterface
+    {
+        return $this->getController()
+            ->getResponse()
+            ->withStatus($status)
+            ->withType('application/json')
+            ->withStringBody(json_encode(
+                $this->processSearchFromInvoke()
+            ));
+    }
 
     public function search(
         ServerRequest $request,
@@ -368,5 +380,18 @@ class ExpressParamsComponent extends Component
             '?' => $queries,
             '_ssl' => (bool)$this->getConfig('ssl'),
         ], true);
+    }
+
+    protected function processSearchFromInvoke()
+    {
+        return $this->search(
+            $this->getController()->getRequest(),
+            $this->getModel()
+        );
+    }
+
+    protected function getModel(): ExpressRepositoryInterface
+    {
+        return $this->getController()->loadModel();
     }
 }

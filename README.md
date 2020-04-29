@@ -71,13 +71,19 @@ public function index()
     // The finder need to be a method what return a Cake\ORM\Query object.
     return $this
         ->responseJson(
-            $this->ExpressParams->search(
+            $this->ExpressRequest->search(
                 $this->request,
                 $this->Domains,
                 'findDomainsByCompany', // Finder model method
                 $companyId // Optional
             )
         );
+}
+
+public function alternative()
+{
+    // Request and Model now is taked from controller.
+    return this->ExpressRequest(200); // Return a ResponseInterface from psr.
 }
 ````
 ``*Of course, don't forget to add a route to this controller.``
@@ -252,7 +258,7 @@ Change some configs...
 public function initialize()
 {
     // ...code
-    $this->loadComponent('ExpressRequest.ExpressParams', [
+    $this->loadComponent('ExpressRequest.ExpressRequest', [
         'ssl' => false,
         'maxSize' => 30,
         'reserved' => [
