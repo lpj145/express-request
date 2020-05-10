@@ -85,6 +85,11 @@ class SearchFilter implements FilterTypeInterface
         return $this->searchValue;
     }
 
+    public function getMode(): string
+    {
+        return $this->mode;
+    }
+
     public function process(QueryExpression $expression, string $alias): QueryExpression
     {
         $fieldName = $alias.'.'.$this->getName();
