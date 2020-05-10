@@ -24,6 +24,8 @@ class SearchFilter implements FilterTypeInterface
 
     private $value;
 
+    private $searchValue;
+
     /**
      * SearchFilter constructor.
      * @param string $name
@@ -42,6 +44,7 @@ class SearchFilter implements FilterTypeInterface
 
     public function setValue($value)
     {
+        $this->searchValue = $value;
         if (
             is_array($value)
             || is_numeric($value)
@@ -75,6 +78,11 @@ class SearchFilter implements FilterTypeInterface
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function getSearchedValue()
+    {
+        return $this->searchValue;
     }
 
     public function process(QueryExpression $expression, string $alias): QueryExpression
