@@ -6,6 +6,7 @@ namespace ExpressRequest\Controller\Component;
 use Cake\Cache\Cache;
 use Cake\Collection\Collection;
 use Cake\Controller\Component;
+use Cake\Core\Configure;
 use Cake\Datasource\Paginator;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
@@ -293,6 +294,11 @@ class ExpressParamsComponent extends Component
     )
     {
         $cachedExpressParams = null;
+
+        if (Configure::read('debug')) {
+            $canCache = false;
+        }
+
         if ($canCache) {
             $configCache = $this->getConfig('cacheConfig');
             $cachedExpressParams = Cache::read('express.queries.'.$urlPath, $configCache);
