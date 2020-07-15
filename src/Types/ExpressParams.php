@@ -129,7 +129,7 @@ class ExpressParams
      */
     public function getNested(): array
     {
-        return $this->nested;
+        return array_map('ucfirst', $this->nested);
     }
 
     /**
