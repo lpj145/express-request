@@ -28,7 +28,7 @@ class ExpressParams
 
     public function getAlias(): string
     {
-        return $this->alias;
+        return ucfirst($this->alias);
     }
 
     public function hasFields()
