@@ -9,7 +9,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^9"
     },
     "autoload": {
         "psr-4": {
@@ -17,11 +17,17 @@
         },
         "files": [
             "src/functions.php"
+        ],
+        "classmap": [
+            "src/"
         ]
     },
     "autoload-dev": {
         "psr-4": {
             "ExpressRequest\\Test\\": "tests/"
         }
+    },
+    "scripts": {
+        "tests": "phpunit tests"
     }
 }
