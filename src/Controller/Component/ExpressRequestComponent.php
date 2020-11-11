@@ -39,7 +39,7 @@ class ExpressRequestComponent extends Component
         'size' => 20,
         'ssl' => true, //generate routes
         'cacheConfig' => 'default',
-        'cache' => true,
+        'cache' => null,
         'reserved' => [
             'size' => 'size',
             'page' => 'page',
@@ -104,7 +104,7 @@ class ExpressRequestComponent extends Component
             $md5UrlPath,
             $params,
             $filterableCollection,
-            $this->getConfig('cache')
+            $this->getConfig('cache', Configure::read('debug', false))
         );
 
         $query = $this->processSearch(
@@ -295,8 +295,8 @@ class ExpressRequestComponent extends Component
     )
     {
         $cachedExpressParams = null;
-        if ($canCache && Configure::read('debug', false) === false) {
-            $configCache = $this->getConfig('cacheConfig');
+        $configCache = $this->getConfig('cacheConfig');
+        if ($canCache) {
             $cachedExpressParams = Cache::read('express.queries.'.$urlPath, $configCache);
         }
 
