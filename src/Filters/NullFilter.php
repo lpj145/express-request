@@ -10,6 +10,7 @@ namespace ExpressRequest\Filters;
 
 
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\QueryInterface;
 
 class NullFilter implements FilterTypeInterface
 {
@@ -60,7 +61,7 @@ class NullFilter implements FilterTypeInterface
         return $this->value;
     }
 
-    public function process(QueryExpression $expression, string $alias): QueryExpression
+    public function process(QueryExpression $expression, string $alias, QueryInterface $query): QueryExpression
     {
         $fieldName = $alias.'.'.$this->getName();
         if ($this->mode === self::IS_STRATEGY) {

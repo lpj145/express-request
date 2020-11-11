@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ExpressRequest\Filters;
 
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\QueryInterface;
 
 class BooleanFilter implements FilterTypeInterface
 {
@@ -57,7 +58,7 @@ class BooleanFilter implements FilterTypeInterface
         return $this->value;
     }
 
-    public function process(QueryExpression $expression, string $alias): QueryExpression
+    public function process(QueryExpression $expression, string $alias, QueryInterface $query): QueryExpression
     {
         return $this->isProcessable()
             ? $expression->eq($this->getName(), $this->getValue())

@@ -27,8 +27,8 @@ class FilterRepositoryService
 
         $expressParams
             ->getFilters()
-            ->eachProcessable(function(FilterTypeInterface $filter) use($expression, $alias){
-                $filter->process($expression, $alias);
+            ->eachProcessable(function(FilterTypeInterface $filter) use($expression, $alias, $query){
+                $filter->process($expression, $alias, $query);
             });
 
         if ($this->expressionIsEmpty($expression)) {

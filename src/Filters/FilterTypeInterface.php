@@ -2,6 +2,7 @@
 namespace ExpressRequest\Filters;
 
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\QueryInterface;
 
 interface FilterTypeInterface
 {
@@ -23,5 +24,5 @@ interface FilterTypeInterface
      * @param string $alias
      * @return QueryExpression
      */
-    public function process(QueryExpression $expression, string $alias): QueryExpression;
+    public function process(QueryExpression $expression, string $alias, QueryInterface $query): QueryExpression;
 }

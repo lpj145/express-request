@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ExpressRequest\Filters;
 
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\QueryInterface;
 
 require __DIR__.'/../functions.php';
 
@@ -18,13 +19,13 @@ class SearchDateFilter implements FilterTypeInterface
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
-    private $value;
+    protected $value;
 
-    private $mode;
+    protected $mode;
 
-    private $operator = 'eq';
+    protected $operator = 'eq';
 
     public function __construct(string $name)
     {
@@ -70,7 +71,7 @@ class SearchDateFilter implements FilterTypeInterface
         return $this->value;
     }
 
-    public function process(QueryExpression $expression, string $alias): QueryExpression
+    public function process(QueryExpression $expression, string $alias, QueryInterface $query): QueryExpression
     {
         $aliasFieldName = $alias.'.'.$this->getName();
         if ($this->mode === self::EXACT_STRATEGY) {
@@ -79,7 +80,8 @@ class SearchDateFilter implements FilterTypeInterface
         }
 
         return $expression
-            ->between($aliasFieldName, $this->getValue()[0], $this->getValue()[1]);
+            ->gte($aliasFieldName, $this->getValue()[0])
+            ->lte($aliasFieldName, $this->getValue()[1]);
     }
 
     private function setOneDateSearch(string $date)
@@ -111,7 +113,7 @@ class SearchDateFilter implements FilterTypeInterface
      * @param string $date
      * @return \DateTime|null
      */
-    private function createDateFromString(string $date): ?\DateTime
+    protected function createDateFromString(string $date): ?\DateTime
     {
         if (matchExp('/^[12][0-9]{3}$/', $date)) {
             return \DateTime::createFromFormat('Y-m-d H:i:s', $date.'-01-01 00:00:00');

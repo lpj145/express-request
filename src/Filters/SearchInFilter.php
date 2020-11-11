@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ExpressRequest\Filters;
 
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\QueryInterface;
 
 class SearchInFilter implements FilterTypeInterface
 {
@@ -52,7 +53,7 @@ class SearchInFilter implements FilterTypeInterface
         return $this->value;
     }
 
-    public function process(QueryExpression $expression, string $alias): QueryExpression
+    public function process(QueryExpression $expression, string $alias, QueryInterface $query): QueryExpression
     {
         return $expression
             ->{$this->operator}(

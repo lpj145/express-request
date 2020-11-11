@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ExpressRequest\Filters;
 
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\QueryInterface;
 
 class NumberFilter implements FilterTypeInterface
 {
@@ -69,7 +70,7 @@ class NumberFilter implements FilterTypeInterface
         return $this->value;
     }
 
-    public function process(QueryExpression $expression, string $alias): QueryExpression
+    public function process(QueryExpression $expression, string $alias, QueryInterface $query): QueryExpression
     {
         $aliasFieldName = $alias.'.'.$this->getName();
         if ($this->mode === self::EXACT_STRATEGY) {
