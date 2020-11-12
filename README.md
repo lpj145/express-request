@@ -222,7 +222,7 @@ filter by value or group values.
 
 ##### SearchDateFilter
 
-*2.0.2* is possible to use ``[gte, gt, lt, lte]`` operators.
+*2.0.1* is possible to use ``[gte, gt, lt, lte]`` operators.
 
 ````php
 // localhost/domains?created_at=2019 - by init of 2019 year.
