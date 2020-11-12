@@ -190,7 +190,7 @@ class SearchDateFilter implements FilterTypeInterface
         }
 
         if ($count === 1 && $this->setOperatorIfValueIsArray($values)) {
-            $this->setOneDateSearch(key($values));
+            $this->setOneDateSearch(current($values));
             return;
         }
 
