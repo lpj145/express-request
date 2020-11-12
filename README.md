@@ -221,6 +221,9 @@ filter by value or group values.
 ````
 
 ##### SearchDateFilter
+
+*2.0.2* is possible to use ``[gte, gt, lt, lte]`` operators.
+
 ````php
 // localhost/domains?created_at=2019 - by init of 2019 year.
 // localhost/domains?created_at=2019-01 - by init of Jan/2019 year.
@@ -228,6 +231,7 @@ filter by value or group values.
 // localhost/domains?created_at=2019-01-12 - by day 12 of Jan/2019 year.
 // localhost/domains?created_at=20190315 - by day 15 of Mar/2019 year.
 // localhost/domains?created_at[lte]=20190315 - search by operators: [lt, lte, gt, gte]
+// localhost/domains?created_at[lte]=20190315&created_at[gte]=20190315 - search by operators: [lt, lte, gt, gte]
 ````
 
 ##### Custom Filter ?
