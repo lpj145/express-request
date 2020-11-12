@@ -190,6 +190,7 @@ class SearchDateFilter implements FilterTypeInterface
         }
 
         if ($count === 1 && $this->setOperatorIfValueIsArray($values)) {
+            $this->mode = self::EXACT_STRATEGY;
             $this->setOneDateSearch(current($values));
             return;
         }
