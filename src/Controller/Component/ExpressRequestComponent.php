@@ -5,18 +5,16 @@ namespace ExpressRequest\Controller\Component;
 
 
 use Cake\Cache\Cache;
-use Cake\Collection\Collection;
 use Cake\Controller\Component;
-use Cake\Core\Configure;
 use Cake\Datasource\Paginator;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
-use Cake\Routing\Router;
 use ExpressRequest\ExpressCollection;
 use ExpressRequest\ExpressRepositoryInterface;
 use ExpressRequest\FilterRepositoryService;
 use ExpressRequest\Filters\FilterTypeInterface;
 use ExpressRequest\FunctionalClosure;
+use ExpressRequest\Types\ExpressConfig;
 use ExpressRequest\Types\ExpressParams;
 use ExpressRequest\Types\FiltersCollection;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +38,7 @@ class ExpressRequestComponent extends Component
         'size' => 20,
         'ssl' => true, //generate routes
         'cacheConfig' => 'default',
+        'fullUrl' => true,
         'cache' => null,
         'reserved' => [
             'size' => 'size',
@@ -78,6 +77,10 @@ class ExpressRequestComponent extends Component
             );
         }
 
+        // force controller uses current request context
+        $this->getController()->setRequest($request);
+
+        $expressConfig = ExpressConfig::factory($this);
         $md5UrlPath = md5($request->getUri()->getPath().'/'.$request->getUri()->getQuery());
         $paginator = new Paginator();
         $params = $request->getQueryParams();
@@ -88,24 +91,24 @@ class ExpressRequestComponent extends Component
             throw new \ErrorException('ExpressRequest: find: \''.$finder.'\' not return Cake\ORM\Query object.');
         }
 
-        if (
-        empty($params)
-        ) {
-            return $this->processPagination(
+        // Reconfigure some config by request query expression.
+        $expressConfig->reconfigure($params);
+
+        if (empty($params)) {
+            return new ExpressCollection(
                 $repositoryQuery,
-                $paginator,
-                1,
-                $this->getConfig('size'),
-                $this->getConfig('maxSize')
+                $expressConfig,
+                $this->getController(),
+                $paginator
             );
         }
 
-        $expressParams = $this->processComposedParams(
+        $expressParams = $this->composeExpressParams(
             $repository,
             $md5UrlPath,
             $params,
             $filterableCollection,
-            $this->getConfig('cache', Configure::read('debug', false))
+            $expressConfig
         );
 
         $query = $this->processSearch(
@@ -113,21 +116,11 @@ class ExpressRequestComponent extends Component
             $expressParams
         );
 
-        $sizeOfPage = (bool)$expressParams->getLimit() ?
-            $expressParams->getLimit() :
-            $this->getConfig('size')
-        ;
-
-        $noPage = $params['noPage'] ?? false;
-        $noPage = (bool)$noPage;
-
-        return $this->processPagination(
+        return new ExpressCollection(
             $query,
-            $paginator,
-            $expressParams->getPage(),
-            $sizeOfPage,
-            $this->getConfig('maxSize'),
-            $noPage
+            $expressConfig,
+            $this->getController(),
+            $paginator
         );
     }
 
@@ -252,45 +245,17 @@ class ExpressRequestComponent extends Component
         return (new FilterRepositoryService())($query, $expressParams);
     }
 
-    protected function processPagination(
-        Query $query,
-        Paginator $paginator,
-        int $page,
-        int $limit,
-        int $maxSize,
-        bool $noPage = false
-    ): ExpressCollection
-    {
-        if ($noPage) {
-            return new ExpressCollection($query);
-        }
-
-        $meta = $this->organizeMetaPagination(
-            $paginator->getPagingParams()[$query->getRepository()->getAlias()]
-        );
-
-        return new ExpressCollection(
-            $query,
-            $paginator,
-            $page,
-            $limit,
-            $maxSize,
-            $meta
-        );
-    }
-
-    protected function processComposedParams(
+    protected function composeExpressParams(
         ExpressRepositoryInterface $repository,
         string $urlPath,
         array $params,
         FiltersCollection $filterableCollection,
-        bool $canCache
+        ExpressConfig $config
     )
     {
         $cachedExpressParams = null;
-        $configCache = $this->getConfig('cacheConfig');
-        if ($canCache) {
-            $cachedExpressParams = Cache::read('express.queries.'.$urlPath, $configCache);
+        if ($config->canCache()) {
+            $cachedExpressParams = Cache::read('express.queries.'.$urlPath, $config->getCacheConfig());
         }
 
         if (!is_null($cachedExpressParams)) {
@@ -308,9 +273,7 @@ class ExpressRequestComponent extends Component
             $expressParams
         );
 
-        $this->matchRun($this->getReserved('size'), $params, 'setSizeOfPage', $expressParams);
         $this->matchRun($this->getReserved('sort'), $params, 'setSortOfItems', $expressParams);
-        $this->matchRun($this->getReserved('page'), $params,'setPage', $expressParams);
         $this->matchRun($this->getReserved('nested'), $params, 'setNestedData', $expressParams);
 
         /**
@@ -329,52 +292,9 @@ class ExpressRequestComponent extends Component
             );
         }
 
-        if ($canCache) {
-            Cache::write('express.queries.'.$urlPath, $expressParams, $configCache);
-        }
+        $config->canCache() && Cache::write('express.queries.'.$urlPath, $expressParams, $config->getCacheConfig());
 
         return $expressParams;
-    }
-
-    protected function organizeMetaPagination(array $paginationParams)
-    {
-        $meta = [
-            'total' => $paginationParams['count'],
-            'per_page' => $paginationParams['perPage'],
-            'current_page' => $paginationParams['page'],
-            'last_page' => $paginationParams['pageCount'],
-            'first_page_url' => $this->composePageUrl(1),
-            'next_page_url' => null,
-            'last_page_url' => $this->composePageUrl($paginationParams['pageCount']),
-            'prev_page_url' => null,
-            'path' => $this->composePageUrl(0, false),
-            'from' => $paginationParams['start'],
-            'to' => $paginationParams['end'],
-        ];
-
-        if ($paginationParams['nextPage']) {
-            $meta['next_page_url'] = $this->composePageUrl($meta['current_page'] + 1);
-        }
-
-        if ($paginationParams['prevPage']) {
-            $meta['prev_page_url'] = $this->composePageUrl($meta['current_page'] - 1);
-        }
-
-        return $meta;
-    }
-
-    protected function composePageUrl(int $page = 0, bool $withParams = true)
-    {
-        $queries = null;
-        if ($withParams) {
-            $queries = $this->getController()->getRequest()->getQueryParams();
-            $queries[$this->getReserved('page')] = $page;
-        }
-        return Router::url([
-            'controller' => $this->getController()->getName(),
-            '?' => $queries,
-            '_ssl' => (bool)$this->getConfig('ssl'),
-        ], true);
     }
 
     protected function processSearchFromInvoke()

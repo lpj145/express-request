@@ -32,4 +32,14 @@ trait FunctionalClosure
             return $value === $itemValue;
         });
     }
+
+    /**
+     * @see https://www.php.net/manual/pt_BR/function.is-bool.php#124179
+     * @param $variable
+     * @return false|mixed
+     */
+    protected function isEnabled($variable)
+    {
+        return is_null($variable) ? false : filter_var($variable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
 }
