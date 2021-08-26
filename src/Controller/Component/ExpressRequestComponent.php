@@ -12,6 +12,7 @@ use Cake\Datasource\Paginator;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
 use Cake\Routing\Router;
+use ExpressRequest\ExpressCollection;
 use ExpressRequest\ExpressRepositoryInterface;
 use ExpressRequest\FilterRepositoryService;
 use ExpressRequest\Filters\FilterTypeInterface;
@@ -65,7 +66,7 @@ class ExpressRequestComponent extends Component
         ExpressRepositoryInterface $repository,
         string $finder = null,
         $arg = null
-    ): \Traversable
+    ): ExpressCollection
     {
         if (is_null($finder)) {
             $finder = 'query';
@@ -258,32 +259,24 @@ class ExpressRequestComponent extends Component
         int $limit,
         int $maxSize,
         bool $noPage = false
-    )
+    ): ExpressCollection
     {
         if ($noPage) {
-            return new Collection(
-                $query
-                    ->all()
-            );
+            return new ExpressCollection($query);
         }
 
-        $data = $paginator->paginate(
-            $query,
-            [
-                'page' => $page,
-                'limit' => $limit,
-            ],
-            [
-                'maxLimit' => $maxSize
-            ]
+        $meta = $this->organizeMetaPagination(
+            $paginator->getPagingParams()[$query->getRepository()->getAlias()]
         );
 
-        return new Collection([
-            'data' => $data,
-            'meta' => $this->organizeMetaPagination(
-                $paginator->getPagingParams()[$query->getRepository()->getAlias()]
-            )
-        ]);
+        return new ExpressCollection(
+            $query,
+            $paginator,
+            $page,
+            $limit,
+            $maxSize,
+            $meta
+        );
     }
 
     protected function processComposedParams(
