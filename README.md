@@ -74,10 +74,24 @@ public function index()
             $this->ExpressRequest->search(
                 $this->request,
                 $this->Domains,
-                'findDomainsByCompany', // Finder model method
+                'findDomainsByCompany', // Finder model method optional
                 $companyId // Optional
             )
         );
+}
+
+public function anotherWay() {
+   // We can make our filtering by request expressions
+   $collection = $this->ExpressRequest->search(
+                $this->request,
+                $this->Domains
+            );
+            
+   $query = $collection->getQuery();
+
+   // And can implement our needed things above user api expressions.
+   $query->where(['id' => 1]);
+   return $this->responseJson($collection);
 }
 
 public function alternative()
