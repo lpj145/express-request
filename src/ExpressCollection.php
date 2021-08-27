@@ -57,6 +57,11 @@ class ExpressCollection implements \IteratorAggregate, \JsonSerializable
         return $this->getIterator();
     }
 
+    public function toArray()
+    {
+        return $this->getIterator();
+    }
+
     public function getRequest(): \Cake\Http\ServerRequest
     {
         return $this->controller->getRequest();
