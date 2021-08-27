@@ -7,7 +7,6 @@ use Cake\Datasource\Paginator;
 use Cake\ORM\Query;
 use Cake\Routing\Router;
 use ExpressRequest\Types\ExpressConfig;
-use ExpressRequest\Types\ExpressParams;
 
 class ExpressCollection implements \IteratorAggregate, \JsonSerializable
 {
@@ -31,8 +30,23 @@ class ExpressCollection implements \IteratorAggregate, \JsonSerializable
 
     public function getIterator()
     {
+        return new \ArrayIterator($this->toArray());
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    public function getItems(): \Cake\Datasource\ResultSetInterface
+    {
+        return $this->query->all();
+    }
+
+    public function toArray(): array
+    {
         if (!$this->config->getPagination() || is_null($this->paginator)) {
-            return new \ArrayIterator($this->query->all());
+            return $this->getItems()->toArray();
         }
 
         $data = $this->paginator->paginate(
@@ -46,20 +60,10 @@ class ExpressCollection implements \IteratorAggregate, \JsonSerializable
             ]
         );
 
-        return new \ArrayIterator([
+        return [
             'data' => $data,
             'meta' => $this->makeMetaPagination()
-        ]);
-    }
-
-    public function jsonSerialize()
-    {
-        return $this->getIterator();
-    }
-
-    public function toArray()
-    {
-        return $this->getIterator();
+        ];
     }
 
     public function getRequest(): \Cake\Http\ServerRequest
