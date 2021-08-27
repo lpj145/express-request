@@ -59,7 +59,7 @@ class ExpressConfig
         $this
             ->setSize($options[$this->getReserved('size')] ?? $this->getSize())
             ->setCurrentPage($options[$this->getReserved('page')] ?? 1)
-            ->setPagination($options['noPage'] ?? $this->getPagination());
+            ->setPagination(isset($options['noPage']) || $this->getPagination());
         return $this;
     }
 
@@ -91,7 +91,7 @@ class ExpressConfig
      */
     public function setPagination($pagination): ExpressConfig
     {
-        $this->pagination = $this->isEnabled($pagination);
+        $this->pagination = isEnabled($pagination);
         return $this;
     }
 
@@ -217,15 +217,5 @@ class ExpressConfig
     public function setCacheConfig(string $cacheConfig): void
     {
         $this->cacheConfig = $cacheConfig;
-    }
-
-    /**
-     * @see https://www.php.net/manual/pt_BR/function.is-bool.php#124179
-     * @param $variable
-     * @return false|mixed
-     */
-    protected function isEnabled($variable)
-    {
-        return is_null($variable) ? false : filter_var($variable, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 }
