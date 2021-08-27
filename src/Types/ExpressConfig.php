@@ -58,8 +58,10 @@ class ExpressConfig
     {
         $this
             ->setSize($options[$this->getReserved('size')] ?? $this->getSize())
-            ->setCurrentPage($options[$this->getReserved('page')] ?? 1)
-            ->setPagination(!isset($options['noPage']) || $this->getPagination());
+            ->setCurrentPage($options[$this->getReserved('page')] ?? 1);
+
+        isset($options['noPage']) && $this->setPagination(false);
+
         return $this;
     }
 
