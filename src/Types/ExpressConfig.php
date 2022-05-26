@@ -57,7 +57,7 @@ class ExpressConfig
 
     public function reconfigure(array $options): ExpressConfig
     {
-        if (key_exists($options, $this->getReserved('size'))) {
+        if (key_exists($this->getReserved('size'), $options)) {
             $this->isToLimitQuery = true;
         }
 
