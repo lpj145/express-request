@@ -14,6 +14,7 @@ class ExpressConfig
     private bool $fullUrl;
     private bool $cache;
     private string $cacheConfig;
+    private bool $isToLimitQuery = false;
 
     private array $keywords = [];
 
@@ -56,6 +57,10 @@ class ExpressConfig
 
     public function reconfigure(array $options): ExpressConfig
     {
+        if (key_exists($options, $this->getReserved('size'))) {
+            $this->isToLimitQuery = true;
+        }
+
         $this
             ->setSize($options[$this->getReserved('size')] ?? $this->getSize())
             ->setCurrentPage($options[$this->getReserved('page')] ?? 1);
@@ -161,6 +166,15 @@ class ExpressConfig
     public function isSsl(): bool
     {
         return $this->ssl;
+    }
+
+    /**
+     * Used to limit query if size param is founded on parameters by request
+     * @return bool
+     */
+    public function isToLimit(): bool
+    {
+        return $this->isToLimitQuery;
     }
 
     /**

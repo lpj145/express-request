@@ -40,6 +40,11 @@ class ExpressCollection implements \IteratorAggregate, \JsonSerializable
 
     public function getItems(): \Cake\Datasource\ResultSetInterface
     {
+        if ($this->config->isToLimit()) {
+            $this->query->limit(
+                $this->config->getSize()
+            );
+        }
         return $this->query->all();
     }
 
